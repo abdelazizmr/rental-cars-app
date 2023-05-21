@@ -7,48 +7,34 @@ import Navbar from "../components/navbar/Navbar";
 import CarCard from "../components/ui/car-card";
 import Footer from "../components/navbar/Footer";
 import LoadingSpinner from "../components/ui/loading-spinner";
+import { useStateContext } from "../context/ContextProvider";
 
 
 function BookCars() {
-  const navigation = useNavigate();
-  const navigate = (route) => navigation(route);
+
+
+  const navigate = useNavigate();
+
   const [cars, setCars] = useState();
   const [isLoading, setLoading] = useState(true);
 
+  const { token } = useStateContext()
+
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/cars").then((response) => {
-      setCars(response.data.data);
-      setLoading(false);
-    });
+    const fetchCars = async ()=>{
+      const {data} = await axios.get('http://127.0.0.1:8000/api/cars')
+      console.log(data.data)
+      setLoading(false)
+      setCars(data.data)
+    }
+
+    fetchCars()
   }, []);
 
   if (isLoading) return <LoadingSpinner />;
 
   return (
     <>
-      <Navbar>
-        <HStack position={"absolute"} right={0} top={3}>
-          <Button
-            color={"gray.600"}
-            colorScheme={"blackAlpha"}
-            variant="ghost"
-            leftIcon={<MdAccountCircle color="gray" />}
-            onClick={() => navigate("/profile")}
-          >
-            Profile
-          </Button>
-          <Button
-            color={"gray.600"}
-            colorScheme={"blackAlpha"}
-            variant="ghost"
-            leftIcon={<MdLogout color="gray" />}
-            onClick={() => navigate("/login")}
-          >
-            Logout
-          </Button>
-        </HStack>
-      </Navbar>
-
       <VStack>
         <SimpleGrid columns={[1, 1, 2, 2, 3]} rowGap={6} columnGap={8} py={10}>
           {cars.map((car) => {

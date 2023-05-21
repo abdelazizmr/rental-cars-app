@@ -1,4 +1,5 @@
 import { Container, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -11,6 +12,7 @@ const Footer = () => {
       align={"center"}
     >
       <Text>© Copyright. All rights reserved.</Text>
+      <Link to="/dashboard">Admin</Link>
     </Container>
   );
 };

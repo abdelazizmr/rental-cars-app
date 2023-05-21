@@ -1,14 +1,17 @@
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import axios from "axios";
-import bcrypt from "bcryptjs";
 import FormButton from "./form-button";
 import FormInput from "./form-input";
+import axiosClient from "../../context/axiosClient";
+import { useStateContext } from "../../context/ContextProvider";
 
 const LoginForm = () => {
-  const navigation = useNavigate();
-  const navigate = (route) => navigation(route);
+
+
+  const {setUser , setToken} = useStateContext()
+
+  const navigate = useNavigate();
   const toast = useToast();
   const toastMessage = (message, type = "error", title = "Error occured.") => {
     return toast({
@@ -26,27 +29,34 @@ const LoginForm = () => {
   function Login(e) {
     e.preventDefault();
 
-    axios
-      .post("http://127.0.0.1:8000/api/login", {
-        email: email.current.value,
+    if (!email.current.value || !password.current.value){
+      return toastMessage(
+          "email and password are required",
+          "error",
+          "empty fields"
+        ); 
+    }
+
+    const payload = {
+      email: email.current.value,
+      password: password.current.value,
+    }
+    
+     axiosClient.post("http://127.0.0.1:8000/api/login",payload)
+      .then(({data}) => {
+        console.log(data)
+        setUser(data.user)
+        setToken(data.token)
+        toastMessage(
+          "Welcome in your website",
+          "success",
+          "Login success"
+        ); 
+        navigate("/cars");
       })
-      .then((response) => {
-        const verifyPassword = bcrypt.compareSync(
-          password.current.value,
-          response.data.data
-        );
-        if (verifyPassword) {
-          toastMessage(
-            "You've logged in successfully.",
-            "success",
-            "Welcome again."
-          );
-          navigate("/cars");
-        } else {
-          toastMessage("Wrong password try again.");
-        }
-      })
-      .catch(() => toastMessage("Wrong Email try again."));
+      .catch((error) => {
+        toastMessage(error.response.data.message)
+      });
   }
 
   return (
@@ -55,7 +65,7 @@ const LoginForm = () => {
         <FormInput name="email" type="email" refe={email} />
         <FormInput name="password" type="password" refe={password} />
 
-        <FormButton bgColor="btn-primary" btnText="Sign In" />
+        <FormButton bgColor="btn-primary" btnText="Log in" />
       </form>
     </div>
   );

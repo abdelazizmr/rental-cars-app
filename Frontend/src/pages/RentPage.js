@@ -13,49 +13,94 @@ import {
   Stack,
   SimpleGrid,
   GridItem,
-  Divider,
+  Divider 
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingSpinner from "../components/ui/loading-spinner";
+import axiosClient from "../context/axiosClient";
+import {useStateContext} from "../context/ContextProvider";
 
 function Rent() {
-  const navigation = useNavigate();
-  const navigate = (route) => navigation(route);
-  let params = useParams();
+  const navigate = useNavigate();
+
+  const { user, token } = useStateContext()
+
+  let {id} = useParams();
   const [car, setCar] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [rentalDate, setrentalDate] = useState('')
+  const [returnDate, setreturnDate] = useState('')
 
-  const rentalDate = useRef();
-  const returnDate = useRef();
+  const toast = useToast();
+  const toastMessage = (message, type = "error", title = "Error occured.") => {
+    return toast({
+      title: title,
+      description: message,
+      status: type,
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/cars/${params.id}`)
+      .get(`http://127.0.0.1:8000/api/cars/${id}`)
       .then((response) => {
-        setCar(response.data.data[0]);
-        setLoading(false);
+      setCar(response.data.data[0]);
+      setLoading(false);
       });
-  }, [params.id]);
+  }, [id]);
 
   if (isLoading) return <LoadingSpinner />;
 
-  function rentACar(e) {
+  async function rentACar(e) {
     e.preventDefault();
 
-    const rentDuration =
-      Date.parse(returnDate.current.value) -
-      Date.parse(rentalDate.current.value);
+    if(!token){
+      navigate('/login')
+      return 
+    }
+
+    const start = new Date(rentalDate);
+    const end = new Date(returnDate);
+
+    const differenceInMilliseconds = Math.abs(end - start);
+    const rentDuration = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
     if (rentDuration <= 0) {
-      //console.log("You can rent for 1 day at least.");
+      toastMessage(
+          `The number of days must be at least 1`,
+          "error",
+          "invalid number of days"
+      ); 
     } else {
-      //console.log(`OK, you are renting for ${rentDuration / 1000 / 60 / 60 / 24} days`);
+      const price = car.price * rentDuration
+      const formData = {
+        rental_date : rentalDate,
+        return_date : returnDate,
+        price,
+        user_id : user.id, // that should be the current user
+        car_id : car.id
+      }
+      console.log(formData)
+      
+      await axiosClient.post('http://127.0.0.1:8000/api/rents',formData)
+      toastMessage(
+          `The rental is done, you are renting for ${rentDuration} days`,
+          "success",
+          "rent created"
+      ); 
+      navigate('/profile')
     }
   }
 
   return (
+
+    
     <Center h={"100vh"} m={["5%", "10%", "12%", "13%", "0"]}>
       <Stack
         direction={{ base: "column", lg: "row" }}
@@ -66,16 +111,16 @@ function Rent() {
         overflow={"hidden"}
       >
         <Box w={{ base: "100%", lg: "50%" }}>
-          <Image src={car.photo2} objectFit="cover" h={"full"}></Image>
+          <Image src={`/images/front${car.id}.webp`} objectFit="cover" h={"full"}></Image>
         </Box>
         <Box w={{ base: "100%", lg: "50%" }} p={"5%"} bg={"white"} h={"full"}>
           <VStack alignItems={"center"} spacing={"3"}>
             <Heading fontWeight={"500"}>{car.brand}</Heading>
 
             <FormLabel fontWeight="600" color="gray.600">Rental date</FormLabel>
-            <Input type={"date"} ref={rentalDate} />
+            <Input type={"date"} value={rentalDate} onChange={(e)=>setrentalDate(e.target.value)} />
             <FormLabel fontWeight="600" color="gray.600">Return date</FormLabel>
-            <Input type={"date"} ref={returnDate} />
+            <Input type={"date"} value={returnDate} onChange={(e)=>setreturnDate(e.target.value)} />
 
             <Divider borderColor="gray.300" py={3} />
             <SimpleGrid w={"full"} columns={3} py={3} textAlign="center">
@@ -114,10 +159,10 @@ function Rent() {
                 fontSize="2xl"
                 fontWeight={["bold", "extrabold"]}
               >
-                ${car.price}.00
+                {car.price}.00 MAD
               </Text>
               <Text ml={2} fontSize="xl" fontWeight="medium" color="gray.500">
-                USD
+                MAD
               </Text>
             </HStack>
             <Button onClick={rentACar} w={"full"}>
@@ -127,6 +172,7 @@ function Rent() {
         </Box>
       </Stack>
     </Center>
+
   );
 }
 

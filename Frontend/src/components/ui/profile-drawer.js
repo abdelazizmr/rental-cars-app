@@ -14,11 +14,60 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
-import React from "react";
+import { useState } from "react";
+import axiosClient from "../../context/axiosClient";
+import { useToast } from "@chakra-ui/react";
+import { useStateContext } from "../../context/ContextProvider";
+import { useNavigate } from "react-router-dom";
 
-function ProfileDrawer() {
+function ProfileDrawer( {user}) {
+
+  const { setUser } = useStateContext()
+
+  const navigate = useNavigate()
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const firstField = React.useRef();
+  const [firstname, setFirstName] = useState(user?.firstname)
+  const [lastname, setLastName] = useState(user?.lastname)
+  const [email, setEmail] = useState(user?.email)
+  const [telephone, setTelephone] = useState(user?.telephone)
+
+  const toast = useToast();
+  const toastMessage = (message, type = "error", title = "Error occured.") => {
+    return toast({
+      title: title,
+      description: message,
+      status: type,
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
+
+  const updateProfile = ()=>{
+    const payload = {
+      firstname,
+      lastname,
+      email,
+      telephone
+    }
+    axiosClient.put(`http://127.0.0.1:8000/api/users/${user.id}`,payload)
+    .then(({data}) => {
+      toastMessage(
+        "We've updated your account for you.",
+        "success",
+        "Account updated."
+      ); 
+      setUser(data)
+      navigate("/cars");
+
+    })
+    .catch((error) => {
+      toastMessage(error.response.data.message)
+    });
+  }
+
+  
 
   return (
     <>
@@ -33,7 +82,7 @@ function ProfileDrawer() {
       <Drawer
         isOpen={isOpen}
         placement="right"
-        initialFocusRef={firstField}
+        initialFocusRef={firstname}
         onClose={onClose}
       >
         <DrawerOverlay />
@@ -48,17 +97,23 @@ function ProfileDrawer() {
             <Stack spacing="24px">
               <Box>
                 <FormLabel htmlFor="firstname">Firstname</FormLabel>
-                <Input ref={firstField} id="firstname"/>
+                <Input value={firstname} onChange={(e)=>setFirstName(e.target.value)}/>
               </Box>
 
               <Box>
                 <FormLabel htmlFor="lastname">Lastname</FormLabel>
-                <Input id="lastname"/>
+                <Input value={lastname} onChange={(e)=>setLastName(e.target.value)}/>
+              </Box>
+
+
+              <Box>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <Input value={email} onChange={(e)=>setEmail(e.target.value)}/>
               </Box>
 
               <Box>
                 <FormLabel htmlFor="username">Phone number</FormLabel>
-                <Input id="tel"/>
+                <Input value={telephone} onChange={(e)=>setTelephone(e.target.value)}/>
               </Box>
             </Stack>
           </DrawerBody>
@@ -67,7 +122,7 @@ function ProfileDrawer() {
             <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="green" px={7}>
+            <Button colorScheme="green" px={7} onClick={(e)=>updateProfile(e)}>
               Save
             </Button>
           </DrawerFooter>

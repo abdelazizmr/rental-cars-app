@@ -12,10 +12,8 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const CarCard = ({ props }) => {
-  const to_route = useNavigate();
-  const navigate = (route) => {
-    to_route(route);
-  };
+  const navigate = useNavigate();
+  // console.log(props)
   return (
     <div className="vehicle-card">
       <div className="details">
@@ -49,7 +47,7 @@ const CarCard = ({ props }) => {
           </HStack>
           <HStack py={3}>
             <Heading size={"md"} fontWeight="600" color="gray.600">
-              ${props.price}
+              {props.price} MAD
             </Heading>
             <Text color="gray.400">/day</Text>
           </HStack>
