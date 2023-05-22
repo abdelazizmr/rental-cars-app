@@ -15,17 +15,18 @@ const RentItem = ({ rent, cars, update, deleteRent }) => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
+  console.log(rent)
   return (
     <Tr key={rent.id}>
-      <Td>  
+      <Td>
         <Image
           className="first"
           objectFit="cover"
-          h={"30px"}
-          w={"30px"}
-          src={`/images/front${rent.photo}.webp`}
-          ></Image>
+          h={"60px"}
+          w={"60px"}
+          borderRadius="10px"
+          src={`http://localhost:8000/images/${rent.photo}`}
+        ></Image>
       </Td>
       <Td>{rent.brand}</Td>
       <Td>{rent.model}</Td>
@@ -36,8 +37,8 @@ const RentItem = ({ rent, cars, update, deleteRent }) => {
       <Td>
         <IconButton
           onClick={handleEditClick}
-          bg={''}
-          _hover={{ bg: 'blue.400', color: 'white' }}
+          bg={""}
+          _hover={{ bg: "blue.400", color: "white" }}
           mr={1}
           aria-label="Edit"
           icon={<EditIcon />}
@@ -46,8 +47,8 @@ const RentItem = ({ rent, cars, update, deleteRent }) => {
       <Td>
         <IconButton
           onClick={() => deleteRent(rent.id)}
-          bg={''}
-          _hover={{ bg: 'red', color: 'white' }}
+          bg={""}
+          _hover={{ bg: "red", color: "white" }}
           ml={1}
           aria-label="Delete"
           icon={<DeleteIcon />}

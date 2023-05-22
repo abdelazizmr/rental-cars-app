@@ -6,9 +6,9 @@ import {
   Th,
   Td,
   Tbody,
-  IconButton
+  IconButton,
+  Flex, Input, InputGroup, InputRightElement
 } from "@chakra-ui/react";
-import { Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
@@ -32,10 +32,15 @@ const Users = () => {
   },[])
 
 
-  const deleteUser = (id) =>{
+  const deleteUser = async (id) =>{
     if(window.confirm('Confirm deleting this user')){
-      axiosClient.delete(`http://127.0.0.1:8000/api/users/${id}`)
-      setUsers(users.filter((user)=> user.id !== id))
+      try{
+              await axiosClient.delete(`http://127.0.0.1:8000/api/users/${id}`);
+              setUsers(users.filter((user) => user.id !== id));
+      }catch(e){
+        console.error(e)
+        alert('error in deleting user')
+      }
     }
   }
 
@@ -53,7 +58,7 @@ const Users = () => {
                   type="text"
                   value={search}
                   placeholder="Search for users"
-                  onChange={(e)=> setSearch(e.target.value)}
+                  onChange={(e)=> setSearch(e.target.value.toLocaleLowerCase())}
                 />
                 <InputRightElement pointerEvents="none">
                   <SearchIcon color="gray.400" />

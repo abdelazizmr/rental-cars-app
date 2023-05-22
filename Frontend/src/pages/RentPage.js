@@ -99,8 +99,6 @@ function Rent() {
   }
 
   return (
-
-    
     <Center h={"100vh"} m={["5%", "10%", "12%", "13%", "0"]}>
       <Stack
         direction={{ base: "column", lg: "row" }}
@@ -111,48 +109,66 @@ function Rent() {
         overflow={"hidden"}
       >
         <Box w={{ base: "100%", lg: "50%" }}>
-          <Image src={`/images/front${car.id}.webp`} objectFit="cover" h={"full"}></Image>
+          <Image
+            src={`http://localhost:8000/images/${car.photo1}`}
+            objectFit="cover"
+            h={"full"}
+          ></Image>
         </Box>
         <Box w={{ base: "100%", lg: "50%" }} p={"5%"} bg={"white"} h={"full"}>
           <VStack alignItems={"center"} spacing={"3"}>
             <Heading fontWeight={"500"}>{car.brand}</Heading>
 
-            <FormLabel fontWeight="600" color="gray.600">Rental date</FormLabel>
-            <Input type={"date"} value={rentalDate} onChange={(e)=>setrentalDate(e.target.value)} />
-            <FormLabel fontWeight="600" color="gray.600">Return date</FormLabel>
-            <Input type={"date"} value={returnDate} onChange={(e)=>setreturnDate(e.target.value)} />
+            <FormLabel fontWeight="600" color="gray.600">
+              Rental date
+            </FormLabel>
+            <Input
+              type={"date"}
+              value={rentalDate}
+              onChange={(e) => setrentalDate(e.target.value)}
+            />
+            <FormLabel fontWeight="600" color="gray.600">
+              Return date
+            </FormLabel>
+            <Input
+              type={"date"}
+              value={returnDate}
+              onChange={(e) => setreturnDate(e.target.value)}
+            />
 
             <Divider borderColor="gray.300" py={3} />
             <SimpleGrid w={"full"} columns={3} py={3} textAlign="center">
-            <GridItem>
-              <Heading fontWeight="500" color="gray.400" size="xs">
-                Gearbox
-              </Heading>
-              <Text fontWeight="600" color="gray.600">
-                {car.gearbox}
-              </Text>
-            </GridItem>
-            <GridItem>
-              <Heading fontWeight="500" color="gray.400" size="xs">
-                Type
-              </Heading>
-              <Text fontWeight="600" color="gray.600">
-                {car.fuel_type}
-              </Text>
-            </GridItem>
-            <GridItem>
-              <Heading fontWeight="500" color="gray.400" size="xs">
-                Available
-              </Heading>
-              <Text fontWeight="600" color="gray.600">
-                {car.available ? "yes" : "no"}
-              </Text>
-            </GridItem>
-          </SimpleGrid>
-          <Divider borderColor="gray.300" py={0} />
+              <GridItem>
+                <Heading fontWeight="500" color="gray.400" size="xs">
+                  Gearbox
+                </Heading>
+                <Text fontWeight="600" color="gray.600">
+                  {car.gearbox}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading fontWeight="500" color="gray.400" size="xs">
+                  Type
+                </Heading>
+                <Text fontWeight="600" color="gray.600">
+                  {car.fuel_type}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading fontWeight="500" color="gray.400" size="xs">
+                  Available
+                </Heading>
+                <Text fontWeight="600" color="gray.600">
+                  {car.available ? "yes" : "no"}
+                </Text>
+              </GridItem>
+            </SimpleGrid>
+            <Divider borderColor="gray.300" py={0} />
 
             <HStack w={"full"} justify={"space-between"}>
-              <Text fontWeight="600" color="gray.600">Total</Text>
+              <Text fontWeight="600" color="gray.600">
+                Total
+              </Text>
               <Spacer />
               <Text
                 color="gray.600"
@@ -172,7 +188,6 @@ function Rent() {
         </Box>
       </Stack>
     </Center>
-
   );
 }
 

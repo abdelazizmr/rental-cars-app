@@ -23,6 +23,7 @@ function Dashboard() {
               transition="all 0.2s"
               borderRadius="md"
               p={2}
+              cursor="pointer"
               _hover={{ bg: "gray.500" }}
               onClick={()=>navigate('/dashboard')}
             >
@@ -31,6 +32,7 @@ function Dashboard() {
             <ListItem
               transition="all 0.2s"
               borderRadius="md"
+                 cursor="pointer"
               my={4}
               p={2}
               _hover={{ bg: "gray.500" }}
@@ -43,6 +45,7 @@ function Dashboard() {
               transition="all 0.2s"
               borderRadius="md"
               p={2}
+                 cursor="pointer"
               _hover={{ bg: "gray.500" }}
               onClick={()=>navigate('/dashboard/rents')}
             >

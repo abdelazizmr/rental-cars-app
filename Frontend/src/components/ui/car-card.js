@@ -24,14 +24,14 @@ const CarCard = ({ props }) => {
               objectFit="cover"
               h={"215px"}
               w={"full"}
-              src={`/images/back${props.id}.webp`}
+              src={`http://localhost:8000/images/${props.photo1}`}
             ></Image>
             <Image
               className="second"
               objectFit="cover"
               h={"215px"}
               w={"full"}
-              src={`/images/front${props.id}.webp`}
+              src={`http://localhost:8000/images/${props.photo2}`}
             ></Image>
           </Box>
         </div>
