@@ -70,6 +70,53 @@ class CarController extends Controller
         return response($car,200);
     }
 
+
+    // update a car info
+    public function update(Request $request,$id)
+    {
+        $car = Car::find($id);
+        if(!$car){
+            $res =  ['message' => 'id car not found'];
+            return response($res, 402);
+        }
+        // Validate the request data including file validation
+        $validatedData = $request->validate([
+            'brand' => 'required',
+            'model' => 'required',
+            'fuel_type' => 'required',
+            'price' => 'required',
+            'gearbox' => 'required',
+            'available' => 'required'
+        ]);
+
+        // Handle file uploads
+        if ($request->hasFile('photo1') && $request->hasFile('photo2')) {
+            $file1 = $request->file('photo1');
+            $file2 = $request->file('photo2');
+            $filename1 = Str::uuid() . '.' . $file1->getClientOriginalExtension();
+            $filename2 = Str::uuid() . '.' . $file2->getClientOriginalExtension();
+            $file1->move(public_path('images'), $filename1);
+            $file2->move(public_path('images'), $filename2);
+            $validatedData['photo1'] = $filename1;
+            $validatedData['photo2'] = $filename2;
+        }
+
+
+
+        if($validatedData['available'] == 'true'){
+            $validatedData['available'] = 1;
+        }else{
+            $validatedData['available'] = 0;
+        }
+
+
+        // Update a car instance
+        $car->update($validatedData);
+
+        // Return a response or redirect as desired
+        return response($car, 200);
+    }
+
     public function destroy($id){
         $car = Car::find($id);
         if(!$car){

@@ -40,6 +40,9 @@ use App\Http\Controllers\RentController;
     // add a car
     Route::post('/cars',[CarController::class,'store']);
 
+    // update a car
+    Route::put('/cars/{id}', [CarController::class, 'update']);
+
     // delete car
     Route::delete('/cars/{id}', [CarController::class, 'destroy']);
 
