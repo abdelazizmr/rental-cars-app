@@ -55,6 +55,8 @@ function Rent() {
       });
   }, [id]);
 
+  console.log(car)
+
   if (isLoading) return <LoadingSpinner />;
 
   async function rentACar(e) {
@@ -118,7 +120,6 @@ function Rent() {
         <Box w={{ base: "100%", lg: "50%" }} p={"5%"} bg={"white"} h={"full"}>
           <VStack alignItems={"center"} spacing={"3"}>
             <Heading fontWeight={"500"}>{car.brand}</Heading>
-
             <FormLabel fontWeight="600" color="gray.600">
               Rental date
             </FormLabel>
@@ -159,7 +160,11 @@ function Rent() {
                   Available
                 </Heading>
                 <Text fontWeight="600" color="gray.600">
-                  {car.available ? "yes" : "no"}
+                  {car.available === 1 ? (
+                    <span className="text-success text-bold">Yes</span>
+                  ) : (
+                    <span className="text-danger text-bold">No</span>
+                  )}
                 </Text>
               </GridItem>
             </SimpleGrid>
@@ -167,7 +172,7 @@ function Rent() {
 
             <HStack w={"full"} justify={"space-between"}>
               <Text fontWeight="600" color="gray.600">
-                Total
+                Price
               </Text>
               <Spacer />
               <Text
@@ -175,15 +180,17 @@ function Rent() {
                 fontSize="2xl"
                 fontWeight={["bold", "extrabold"]}
               >
-                {car.price}.00 MAD
+                {car.price}.00
               </Text>
               <Text ml={2} fontSize="xl" fontWeight="medium" color="gray.500">
-                MAD
+                MAD/day
               </Text>
             </HStack>
-            <Button onClick={rentACar} w={"full"}>
-              Confirm rent
-            </Button>
+            {car.available === 1 && (
+              <Button onClick={rentACar} w={"full"}>
+                Confirm rent
+              </Button>
+            )}
           </VStack>
         </Box>
       </Stack>

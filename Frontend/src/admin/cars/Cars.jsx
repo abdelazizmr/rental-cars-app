@@ -99,7 +99,7 @@ const Cars = () => {
             cars
               .filter((car) => car.brand.toLowerCase().includes(search))
               .map((car) => (
-                <CarItem car={car} key={car.id} deleteCar={deleteCar} />
+                <CarItem car={car} key={car.id} deleteCar={deleteCar} cars={cars} setcars={setcars} />
               ))}
         </Tbody>
       </Table>

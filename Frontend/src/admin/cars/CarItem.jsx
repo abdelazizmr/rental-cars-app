@@ -5,8 +5,33 @@ import {
   Image
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useState } from "react";
+import EditCar from "./EditCar";
+import axiosClient from "../../context/axiosClient";
 
-const CarItem = ({ car, deleteCar }) => {
+const CarItem = ({ car, deleteCar, cars, setcars }) => {
+
+  const [isOpen, setisOpen] = useState(false)
+
+  const update = async (updatedData) =>{
+    console.log(updatedData);
+    try{
+      const { data } = await axiosClient.put(
+        `http://127.0.0.1:8000/api/cars/${updatedData.id}`,
+        updatedData
+      );
+      // console.log('updated : ',data)
+       setcars(cars => cars.map(car => {
+          if (car.id === updatedData.id) {
+            return updatedData; // Replace the whole object with the new one
+          }
+          return car; // Return unchanged objects
+        }))
+
+    }catch(e){
+      console.error(e)
+    }
+  }
 
   return (
     <Tr>
@@ -40,6 +65,7 @@ const CarItem = ({ car, deleteCar }) => {
           mr={1}
           aria-label="Edit"
           icon={<EditIcon />}
+          onClick={()=>setisOpen(true)}
         />
 
         <IconButton
@@ -51,6 +77,9 @@ const CarItem = ({ car, deleteCar }) => {
           onClick={()=>deleteCar(car.id)}
         />
       </Td>
+
+      <EditCar isOpen={isOpen} setisOpen={setisOpen} car={car} update={update} />
+
     </Tr>
   );
 };
