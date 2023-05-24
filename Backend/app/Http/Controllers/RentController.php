@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Rent;
 use Illuminate\Http\Request;
-
+use PDF;
 class RentController extends Controller
 {
     /**
@@ -14,8 +14,32 @@ class RentController extends Controller
      */
     public function index()
     {
-        // Assuming the $id parameter is the user ID
-        return Rent::all();
+        
+        $allRents = Rent::all();
+        $results = [];
+        foreach ($allRents as $rent) {
+            $obj  = [
+                    'id' => $rent->id,
+                    // car info
+                    'car_id' => $rent->cars->id,
+                    'brand' => $rent->cars->brand,
+                    'price' => $rent->cars->price,
+                    'photo' => $rent->cars->photo1,
+                    'fuel_type' => $rent->cars->fuel_type,
+                    // user info
+                    'user_id' => $rent->user->id,
+                    'firstname' => $rent->user->firstname,
+                    'telephone' => $rent->user->telephone,
+                    //rents info
+                    'total' => $rent->price,
+                    'rental_date' => $rent->rental_date,
+                    'return_date' => $rent->return_date,
+                ];
+
+            $results[] = $obj;
+        }
+
+        return $results;
 
      
     }
@@ -156,4 +180,41 @@ class RentController extends Controller
   
         return $obj;
     }
+
+
+
+
+    // ...
+
+
+    public function downloadRent($id)
+    {
+        $rent = Rent::findOrFail($id);
+
+        // Prepare data for the PDF
+        $obj = [
+            'id' => $rent->id,
+            'car_id' => $rent->cars->id,
+            'brand' => $rent->cars->brand,
+            'price' => $rent->cars->price,
+            'photo' => $rent->cars->photo1,
+            'fuel_type' => $rent->cars->fuel_type,
+            'user_id' => $rent->user->id,
+            'firstname' => $rent->user->firstname,
+            'telephone' => $rent->user->telephone,
+            'total' => $rent->price,
+            'rental_date' => $rent->rental_date,
+            'return_date' => $rent->return_date,
+        ];
+
+        // Generate the PDF using the view and data
+        $pdf = PDF::loadView('pdfs.rent_pdf', compact('obj'))->setPaper('A4', 'portrait');
+
+        // Generate the filename
+        $filename = $rent->user->firstname.'_rent_facture.pdf';
+
+        // Download the PDF file
+        return $pdf->download($filename);
+    }
+
 }

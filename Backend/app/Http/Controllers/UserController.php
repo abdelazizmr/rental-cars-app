@@ -104,17 +104,18 @@ class UserController extends Controller
     }
 
 
-    public function index(){
+    public function index()
+    {
         return User::all();
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $user = User::find($id);
-        if(!$user){
+        if (!$user) {
             $response =  ['message' => 'No such user with this id'];
             return response($response, 400);
         }
         return $user->delete();
     }
-
 }

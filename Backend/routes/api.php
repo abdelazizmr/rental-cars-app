@@ -46,13 +46,17 @@ use App\Http\Controllers\RentController;
     // delete car
     Route::delete('/cars/{id}', [CarController::class, 'destroy']);
 
+    //rents
+    Route::resource('/rents', RentController::class);
+
+    // download rent facture
+    Route::get('/rents/{id}/download-rent', [RentController::class, 'downloadRent']);
+
 
 //! Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
-    //rents
-    Route::resource('/rents', RentController::class);
 
     // list of rents for a user
     Route::get('/my-rents/{id}', [RentController::class, 'myRents']);
