@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingSpinner from "../components/ui/loading-spinner";
@@ -55,7 +56,6 @@ function Rent() {
       });
   }, [id]);
 
-  console.log(car)
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -67,37 +67,62 @@ function Rent() {
       return 
     }
 
+    if(!rentalDate || !returnDate){
+        return Swal.fire({
+          icon: "error",
+          title: "rental and return dates are required",
+        });
+    }
+
     const start = new Date(rentalDate);
     const end = new Date(returnDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+
+    if (start < today) {
+      return Swal.fire({
+        icon: "error",
+        title: "Invalid rental date",
+        text: "Invalid rental date: Rental date has passed",
+      });
+    }
+
+
+
+    if (end <= start){
+      return Swal.fire({
+        icon: "error",
+        title: "invalid number of days",
+        text: "The number of days must be at least 1"
+      });
+    }
+
+
 
     const differenceInMilliseconds = Math.abs(end - start);
     const rentDuration = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
-    if (rentDuration <= 0) {
-      toastMessage(
-          `The number of days must be at least 1`,
-          "error",
-          "invalid number of days"
-      ); 
-    } else {
       const price = car.price * rentDuration
       const formData = {
         rental_date : rentalDate,
         return_date : returnDate,
         price,
-        user_id : user.id, // that should be the current user
+        user_id : user.id,
         car_id : car.id
       }
       console.log(formData)
       
       await axiosClient.post('http://127.0.0.1:8000/api/rents',formData)
+
       toastMessage(
           `The rental is done, you are renting for ${rentDuration} days`,
           "success",
           "rent created"
       ); 
+
       navigate('/profile')
-    }
+    
   }
 
   return (

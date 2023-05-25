@@ -9,28 +9,23 @@ const RentItem = ({ rent }) => {
 
 
 
- const downloadRent = async (id) => {
-   try {
-     const response = await axiosClient({
-       url: `/rents/${id}/download-rent`,
-       method: "GET",
-       responseType: "arraybuffer", // Set the response type to 'arraybuffer'
-     });
+    const downloadRent = async (id,firstname) => {
+      try {
+        const { data } = await axiosClient.get(`/rents/${id}/download-rent`, {
+          responseType: "blob",
+        });
+        const url = window.URL.createObjectURL(new Blob([data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${firstname}_rent_facture.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (e) {
+        console.error(e);
+      }
+    };
 
-     // Create a Blob from the response data
-     const blob = new Blob([response.data], { type: "application/pdf" });
-
-     // Create a temporary <a> element and click it to trigger the file download
-     const link = document.createElement("a");
-     link.href = window.URL.createObjectURL(blob);
-     link.setAttribute("download", "rent_facture.pdf");
-     document.body.appendChild(link);
-     link.click();
-     document.body.removeChild(link);
-   } catch (error) {
-     console.error(error);
-   }
- };
 
 
   return (
@@ -62,7 +57,7 @@ const RentItem = ({ rent }) => {
           ml={1}
           aria-label="download"
           icon={<DownloadIcon />}
-          onClick={() => downloadRent(rent.id)}
+          onClick={() => downloadRent(rent.id,rent.firstname)}
         />
       </Td>
     </Tr>

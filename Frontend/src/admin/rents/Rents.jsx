@@ -20,11 +20,11 @@ import RentItem from "./RentItem";
 
 
 const Rents = () => {
-
   const [rents, setrents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-
+  const [ascPrice , setAscPrice] = useState(false)
+  const [ascReturnDate , setascReturnDate] = useState(false)
 
   useEffect(() => {
     const fetchrents = async () => {
@@ -35,6 +35,31 @@ const Rents = () => {
     fetchrents();
   }, []);
 
+  // Sort the data array in ascending/ descending order by total price
+  useEffect(()=>{
+       if (ascPrice) {
+         const sortedData = [...rents].sort((a, b) => a.total - b.total);
+         setrents(sortedData);
+       } else {
+         const sortedData = [...rents].sort((a, b) => b.total - a.total);
+         setrents(sortedData);
+       }
+  },[ascPrice]) 
+  
+  // Sort the data array in ascending/ descending order by return date
+  useEffect(() => {
+    if (ascReturnDate) {
+      const sortedData = [...rents].sort(
+        (a, b) => new Date(a.return_date) - new Date(b.return_date)
+      );
+      setrents(sortedData);
+    } else {
+      const sortedData = [...rents].sort(
+        (a, b) => new Date(b.return_date) - new Date(a.return_date)
+      );
+      setrents(sortedData);
+    }
+  }, [ascReturnDate]);
 
   if (loading) return <LoadingSpinner />;
 
@@ -70,7 +95,7 @@ const Rents = () => {
                 ml={2}
                 aria-label="order_price"
                 icon={<UpDownIcon />}
-                onClick={() => console.log("delete")}
+                onClick={() => setascReturnDate(!ascReturnDate)}
               />
             </Th>
             <Th>
@@ -79,7 +104,7 @@ const Rents = () => {
                 ml={2}
                 aria-label="order_price"
                 icon={<UpDownIcon />}
-                onClick={() => console.log("delete")}
+                onClick={() => setAscPrice(!ascPrice)}
               />
             </Th>
             <Th></Th>
