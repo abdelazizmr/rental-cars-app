@@ -14,16 +14,16 @@ const CarItem = ({ car, deleteCar, cars, setcars }) => {
   const [isOpen, setisOpen] = useState(false)
 
   const update = async (updatedData) =>{
-    console.log(updatedData);
+    // console.log(updatedData);
     try{
       const { data } = await axiosClient.put(
         `http://127.0.0.1:8000/api/cars/${updatedData.id}`,
         updatedData
       );
-      // console.log('updated : ',data)
+      console.log('updated : ',data)
        setcars(cars => cars.map(car => {
           if (car.id === updatedData.id) {
-            return updatedData; // Replace the whole object with the new one
+            return data; // Replace the whole object with the new one
           }
           return car; // Return unchanged objects
         }))
@@ -52,6 +52,7 @@ const CarItem = ({ car, deleteCar, cars, setcars }) => {
       <Td>{car.gearbox}</Td>
       <Td>{car.fuel_type}</Td>
       <Td>{car.price} MAD</Td>
+
       {car.available === 1 ? (
         <Td className="text-success text-center">True</Td>
       ) : (

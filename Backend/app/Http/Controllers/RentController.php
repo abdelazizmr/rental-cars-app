@@ -14,7 +14,7 @@ class RentController extends Controller
      */
     public function index()
     {
-        
+
         $allRents = Rent::all();
         $results = [];
         foreach ($allRents as $rent) {
@@ -138,7 +138,7 @@ class RentController extends Controller
     public function myRents($id)
     {
         // Assuming the $id parameter is the user ID
-        $rents = Rent::where('user_id', $id)->get();
+        $rents = Rent::where('user_id', $id)->orderBy('id', 'desc')->get();
         $results = [];
         foreach($rents as $rent){
             $obj  = [
@@ -211,10 +211,12 @@ class RentController extends Controller
         $pdf = PDF::loadView('pdfs.rent_pdf', compact('obj'))->setPaper('A4', 'portrait');
 
         // Generate the filename
-        $filename = $rent->user->firstname.'_rent_facture.pdf';
+        $filename = ''.$rent->user->firstname.'_rent_facture.pdf';
 
         // Download the PDF file
-        return $pdf->download($filename);
+            return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 
 }
