@@ -8,11 +8,12 @@ const Footer = () => {
       minW={"full"}
       maxW={"6xl"}
       mt={4}
-      py={8}
+      p={8}
       align={"center"}
+      style={{display : 'flex' , justifyContent : 'space-between', alignItems : 'center'}}
     >
       <Text>© Copyright. All rights reserved.</Text>
-      <Link to="/dashboard">Admin</Link>
+      <Link to="/admin/login" style={{fontSize : '14px'}}>Admin</Link>
     </Container>
   );
 };

@@ -12,15 +12,15 @@ import NotFound from "./pages/NotFound";
 import Users from "./admin/users/Users"
 import Cars from "./admin/cars/Cars"
 import Rents from "./admin/rents/Rents"
+import DashboardLogin from "./pages/DashboardLogin";
 
 
 function App() {
 
   return (
-
     <BrowserRouter>
       <Navbar>
-          <NavbarLoginButtons />
+        <NavbarLoginButtons />
       </Navbar>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -28,13 +28,14 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="/cars" element={<BookCars />} />
         <Route path="/cars/:id" element={<Rent />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="dashboard" element={<Dashboard />}>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/login" element={<DashboardLogin />} />
+        <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<Users />} />
           <Route path="/dashboard/cars" element={<Cars />} />
           <Route path="/dashboard/rents" element={<Rents />} />
         </Route>
-        <Route path="*" element={<NotFound/>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

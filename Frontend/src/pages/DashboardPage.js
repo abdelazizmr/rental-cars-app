@@ -17,7 +17,7 @@ function Dashboard() {
   return (
     <Container h="100vh" maxW="100vw" p={0}>
       <HStack h={"full"} spacing="0">
-        <Box bg={"gray.600"} px="5" py={"40vh"} h={"full"} w="200px" position="sticky" top="0">
+        <Box bg={"gray.600"} px="5" py={"40vh"} h={"100vh"} w={'20%'}>
           <List color={"white"} align="center">
             <ListItem
               transition="all 0.2s"
@@ -53,7 +53,7 @@ function Dashboard() {
             </ListItem>
           </List>
         </Box>
-        <Box h={"full"} w={'full'}>
+        <Box h={"full"} w={'full'} style={{flex : 1}}>
           <Outlet />
         </Box>
       </HStack>

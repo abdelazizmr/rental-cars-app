@@ -12,7 +12,7 @@ import {
   InputRightElement,
   IconButton,
 } from "@chakra-ui/react";
-import { SearchIcon, UpDownIcon } from "@chakra-ui/icons";
+import { SearchIcon, UpDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import axiosClient from "../../context/axiosClient";
 import LoadingSpinner from "../../components/ui/loading-spinner";
@@ -65,7 +65,14 @@ const Rents = () => {
 
   return (
     <TableContainer p={10}>
-      <Flex justify="end" py={2} mb={4}>
+      <Flex justify="space-between" py={2} mb={4}>
+        <Button
+          colorScheme="blue"
+          leftIcon={<ArrowUpIcon />}
+          onClick={() => console.log(true)}
+        >
+          Export Excel
+        </Button>
         <InputGroup w="300px">
           <Input
             type="text"
