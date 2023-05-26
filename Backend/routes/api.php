@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -27,8 +28,12 @@ use App\Http\Controllers\RentController;
     Route::get('/cars', [CarController::class, 'index']);
     // show a car
     Route::get('/cars/{id}', [CarController::class, 'show']);
+
+    //! Admin auth
+    Route::post('/admin/signup', [AdminController::class, 'signup']);
+    Route::post('/admin/login', [AdminController::class, 'login']);
     
-    //! admin =====================================================
+    //! DashBoard =====================================================
     //? users
     // list of users
     Route::get('/users', [UserController::class, 'index']);
@@ -70,16 +75,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //! Dashbaord =============================================
 
-    // // list of users
-    // Route::get('/users', [UserController::class, 'index']);
-
-    // delete a user
-    //Route::delete('/users/{id}', [UserController::class, 'destroy']);
-    
-    // cars 
-    // Route::post('/cars', [CarController::class, 'store']);
-    // Route::put('/cars/{id}', [CarController::class, 'update']);
-    // Route::delete('/cars/{id}', [CarController::class, 'destroy']);
     
     // logout 
     Route::post('/logout', [UserController::class, 'logout']);
