@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function signup(Request $request)
     {
         $fields = $request->validate([
-            'username' => 'required|string',
+            'username' => 'required|string|unique:admins,username',
             'password' => 'required|string'
         ]);
 
@@ -27,7 +27,7 @@ class AdminController extends Controller
 
         $response = [
             'user' => $admin,
-            'token' => $token
+            'admin_token' => $token
         ];
 
         return response($response, 201);
@@ -54,7 +54,7 @@ class AdminController extends Controller
 
         $response = [
             'user' => $admin,
-            'token' => $token
+            'admin_token' => $token
         ];
 
         return response($response, 201);
@@ -69,47 +69,4 @@ class AdminController extends Controller
         ];
     }
 
-
-
-    public function update(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
-            $response =  ['message' => 'No such user with this id'];
-            return response($response, 400);
-        }
-
-        $fields = $request->validate([
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
-            'telephone' => 'required|string',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                Rule::unique('users')->ignore($user->id),
-            ],
-        ]);
-
-        $user->update($fields);
-
-        return $user;
-    }
-
-
-    public function index()
-    {
-        return User::all();
-    }
-
-    public function destroy($id)
-    {
-        $user = User::find($id);
-        if (!$user) {
-            $response =  ['message' => 'No such user with this id'];
-            return response($response, 400);
-        }
-        return $user->delete();
-    }
 }

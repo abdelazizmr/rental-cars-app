@@ -32,6 +32,7 @@ use App\Http\Controllers\RentController;
     //! Admin auth
     Route::post('/admin/signup', [AdminController::class, 'signup']);
     Route::post('/admin/login', [AdminController::class, 'login']);
+   
     
     //! DashBoard =====================================================
     //? users
@@ -61,16 +62,18 @@ use App\Http\Controllers\RentController;
 //! Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-
-
+    // !user
     // list of rents for a user
     Route::get('/my-rents/{id}', [RentController::class, 'myRents']);
-
     // edit a rent
     Route::get('/my-rents/edit/{id}', [RentController::class, 'editRent']);
-
     // update the user profile
     Route::put('/users/{id}', [UserController::class, 'update']);
+
+    //! admin
+    Route::post('/admin/logout', [AdminController::class, 'logout']);
+
+
 
 
     //! Dashbaord =============================================
