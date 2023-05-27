@@ -13,7 +13,7 @@ const Footer = () => {
       style={{display : 'flex' , justifyContent : 'space-between', alignItems : 'center'}}
     >
       <Text>© Copyright. All rights reserved.</Text>
-      <Link to="/admin/login" style={{fontSize : '14px'}}>Admin</Link>
+      <Link to="/dashboard" style={{fontSize : '14px'}}>Admin</Link>
     </Container>
   );
 };

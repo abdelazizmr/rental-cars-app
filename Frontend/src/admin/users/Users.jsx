@@ -14,6 +14,8 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import axiosClient from "../../context/axiosClient";
 import LoadingSpinner from "../../components/ui/loading-spinner";
+import Swal from "sweetalert2"
+
 
 
 
@@ -33,15 +35,27 @@ const Users = () => {
 
 
   const deleteUser = async (id) =>{
-    if(window.confirm('Confirm deleting this user')){
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to get this user back",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async(result) => {
+      if (result.isConfirmed) {
       try{
-              await axiosClient.delete(`http://127.0.0.1:8000/api/users/${id}`);
-              setUsers(users.filter((user) => user.id !== id));
+        await axiosClient.delete(`http://127.0.0.1:8000/api/users/${id}`);
+        setUsers(users.filter((user) => user.id !== id));
+        Swal.fire("Deleted!", "", "success");
       }catch(e){
         console.error(e)
-        alert('error in deleting user')
       }
-    }
+      }
+    });
+    
   }
 
 

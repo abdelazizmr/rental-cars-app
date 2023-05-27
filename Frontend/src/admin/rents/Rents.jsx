@@ -65,14 +65,14 @@ const Rents = () => {
 
   return (
     <TableContainer p={10}>
-      <Flex justify="space-between" py={2} mb={4}>
-        <Button
+      <Flex justify="end" py={2} mb={4}>
+        {/* <Button
           colorScheme="blue"
           leftIcon={<ArrowUpIcon />}
           onClick={() => console.log(true)}
         >
           Export Excel
-        </Button>
+        </Button> */}
         <InputGroup w="300px">
           <Input
             type="text"

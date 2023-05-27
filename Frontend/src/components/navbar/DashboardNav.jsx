@@ -1,19 +1,40 @@
-import { Box, Flex, Spacer, Button, Icon } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Box, Flex, Spacer, Button } from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
 import { MdLogout } from 'react-icons/md';
+import { useStateContext } from '../../context/ContextProvider';
+import axiosAdminClient from '../../context/axiosAdminClient';
 
-function DashboardNav({ onLogout }) {
+function DashboardNav() {
+
+  const { setAdminToken }  = useStateContext()
+
+  const navigate = useNavigate()
 
 
-  const handleLogout = () => {
-    // Handle logout logic
-    // onLogout();
+  const handleLogout = async () => {
+    try {
+      await axiosAdminClient.post("http://127.0.0.1:8000/api/admin/logout");
+      setAdminToken(null);
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
-    <Flex alignItems="center" p={4}>
+    <Flex
+      className=" navbar navbar-expand-lg"
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      bg={"gray.600"}
+      p={4}
+      color={"white"}
+    >
       <Box>
-        <Link to="/dashboard" fontWeight="bold" fontSize="xl">
+        <Link
+          to="/dashboard"
+          style={{ fontWeight: "bold", fontSize: "1.2rem" }}
+        >
           Dashboard
         </Link>
       </Box>
@@ -21,10 +42,10 @@ function DashboardNav({ onLogout }) {
       <Spacer />
 
       <Button
-        color={"gray.600"}
+        color={"white"}
         colorScheme={"blackAlpha"}
         variant="ghost"
-        leftIcon={<MdLogout color="gray" />}
+        leftIcon={<MdLogout color="white" />}
         onClick={() => handleLogout()}
       >
         Logout

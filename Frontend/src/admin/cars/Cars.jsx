@@ -14,7 +14,7 @@ import axiosClient from "../../context/axiosClient";
 import LoadingSpinner from "../../components/ui/loading-spinner";
 import CarItem from "./CarItem";
 import AddCar from "./AddCar";
-
+import Swal from "sweetalert2";
 
 
 const Cars = () => {
@@ -35,15 +35,26 @@ const Cars = () => {
 
   
   const deleteCar = async (id) => {
-    if (window.confirm("Confirm deleting this car")) {
-      try {
-        await axiosClient.delete(`http://localhost:8000/api/cars/${id}`);
-        setcars(cars.filter((car)=> car.id !== id))
-      } catch (e) {
-        console.error(e);
-        alert('error in deleting car')
-      }
-    }
+     Swal.fire({
+       title: "Are you sure?",
+       text: "You won't be able to get this user back",
+       icon: "warning",
+       showCancelButton: true,
+       confirmButtonColor: "#3085d6",
+       cancelButtonColor: "#d33",
+       confirmButtonText: "Yes, delete it!",
+     }).then(async (result) => {
+       if (result.isConfirmed) {
+         try {
+           await axiosClient.delete(`http://localhost:8000/api/cars/${id}`);
+           setcars(cars.filter((car) => car.id !== id));
+           Swal.fire("Deleted!", "", "success");
+         } catch (e) {
+           console.error(e);
+         }
+       }
+     });
+   
   };
 
 

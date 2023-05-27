@@ -16,7 +16,7 @@ const NavbarLoginButtons = () => {
     if(token){
       axiosClient.get('/user')
       .then(({data}) => {
-          setUser(data)
+        setUser(data)
       })
     }
   },[])

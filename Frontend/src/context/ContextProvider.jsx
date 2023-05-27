@@ -1,4 +1,6 @@
 import {createContext, useContext, useState} from "react";
+import Cookies from "universal-cookie";
+
 
 
 
@@ -10,21 +12,30 @@ const StateContext = createContext({
   notification: null,
   setUser: () => {},
   setToken: () => {},
-  setNotification: () => {}
+  setAdminToken:() =>{}
 })
 
+
 export const ContextProvider = ({children}) => {
+  
+
   const [user, setUser] = useState({});
   const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
-  const [notification, _setNotification] = useState('');
+  const [adminToken, _setAdminToken] = useState(localStorage.getItem('ADMIN_TOKEN'));
 
 
-  
-  
+  console.log('admin-cookies',adminToken)
 
 
+    const setAdminToken = (token) => {
+      _setAdminToken(token);
+      if (token) {
+        localStorage.setItem("ADMIN_TOKEN", token);
+      } else {
+        localStorage.removeItem("ADMIN_TOKEN");
+      }
+    };
 
-  
 
   const setToken = (token) => {
     _setToken(token)
@@ -36,13 +47,7 @@ export const ContextProvider = ({children}) => {
   }
 
 
-  const setNotification = message => {
-    _setNotification(message);
 
-    setTimeout(() => {
-      _setNotification('')
-    }, 5000)
-  }
 
   return (
     <StateContext.Provider value={{
@@ -50,8 +55,8 @@ export const ContextProvider = ({children}) => {
       setUser,
       token,
       setToken,
-      notification,
-      setNotification
+      adminToken,
+      setAdminToken
     }}>
       {children}
     </StateContext.Provider>

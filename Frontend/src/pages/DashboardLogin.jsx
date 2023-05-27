@@ -5,10 +5,56 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import {ArrowBackIcon} from "@chakra-ui/icons"
+import { useState } from "react";
+import Swal from "sweetalert2";
+import { useStateContext } from "../context/ContextProvider";
+import axiosClient from "../context/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 function DashboardLogin() {
-  const handleLogin = () => {
-    // Handle login logic here
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { setAdminToken } =  useStateContext()
+
+  const navigate = useNavigate()
+
+  const handleLogin = async (e) => {
+
+    e.preventDefault();
+    const admin = {
+      username,
+      password
+    }
+
+    if(!admin.username || !admin.password){
+      return Swal.fire({
+        icon: "error",
+        title: "Fields are required",
+      });
+    }
+
+
+    try{
+      const {data} = await axiosClient.post('http://127.0.0.1:8000/api/admin/login',admin)
+
+      setAdminToken(data.admin_token)
+
+      navigate('/dashboard')
+
+      
+    }catch(e){
+      console.error(e)
+      return Swal.fire({
+        icon: "error",
+        title: e.response.data.message,
+      });
+    }
+
+
+
   };
 
   return (
@@ -21,13 +67,15 @@ function DashboardLogin() {
       rounded="md"
       p={6}
     >
-      <form onSubmit={handleLogin}>
+      <form onSubmit={(e)=>handleLogin(e)}>
         <FormControl isRequired>
           <FormLabel>Admin username</FormLabel>
           <Input
-            type="email"
+            type="text"
             placeholder="Enter your email"
             focusBorderColor="blue.400"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </FormControl>
         <FormControl mt={4} isRequired>
@@ -36,6 +84,8 @@ function DashboardLogin() {
             type="password"
             placeholder="Enter your password"
             focusBorderColor="blue.400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
         <Button

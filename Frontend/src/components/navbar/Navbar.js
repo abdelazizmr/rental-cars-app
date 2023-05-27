@@ -4,7 +4,7 @@ import NavbarLinks from "./NavbarLinks";
 import { useLocation } from "react-router-dom"
 import DashboardNav from "./DashboardNav";
 import { Link } from "react-router-dom";
-
+import {ArrowBackIcon} from "@chakra-ui/icons"
 
 const Navbar = ({ children }) => {
 
@@ -12,10 +12,12 @@ const Navbar = ({ children }) => {
 
   if (location.pathname.startsWith("/admin"))  
   return (
-    <Container maxWidth="1720px" px={[12, 8, 8]}>
-    <Link to="/" mt={5}>Go Back</Link>
+    <Container maxWidth="1720px" px={[12, 8, 8]} mt={4}>
+      <Link to="/" mt={5}>
+        <ArrowBackIcon/> Go Back
+      </Link>
     </Container>
-  )
+  );
 
 
   if (location.pathname.startsWith("/dashboard")) return <DashboardNav />;

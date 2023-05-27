@@ -23,14 +23,10 @@ import axios from "axios";
 import RentItem from "../components/ui/RentItem";
 import axiosClient from "../context/axiosClient";
 import {useStateContext} from "../context/ContextProvider";
-
+import Swal from "sweetalert2";
 
 
 function Profile() {
-
-
-
-  //
 
 
   const [rents, setrents] = useState([])
@@ -40,8 +36,6 @@ function Profile() {
 
 
   const { user } = useStateContext() 
-
-  console.log(user)
 
   // fetching the current user rents
   useEffect(()=>{
@@ -70,14 +64,21 @@ function Profile() {
 
 
   const deleteRent = async (id)=>{
-    if( window.confirm('do you really want to delete this rent ?') ){
-      
-      await axiosClient.delete(`http://127.0.0.1:8000/api/rents/${id}`)
-      setrents(rents.filter(rent => rent.id !== id))
-      return 
-      
-    }
-
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You may not be able to rent this car again",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        await axiosClient.delete(`http://127.0.0.1:8000/api/rents/${id}`)
+        Swal.fire("Deleted!", "", "success");
+        setrents(rents.filter(rent => rent.id !== id))
+      }
+    });
   }
 
   const update = async(updated)=>{
@@ -90,7 +91,6 @@ function Profile() {
     const car = cars.filter((car)=> car.id === updated.car_id)
 
     if (!car){
-      //console.log('no car found')
       return
     }
 

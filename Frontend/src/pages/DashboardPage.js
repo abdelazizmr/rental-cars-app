@@ -7,17 +7,26 @@ import {
 } from "@chakra-ui/react";
 import {useStateContext} from "../context/ContextProvider";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Dashboard() {
 
-  const { token } = useStateContext()
+  const { adminToken } = useStateContext()
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!adminToken) {
+      return navigate("/admin/login");
+    }
+  }, []);
+
+
 
   return (
     <Container h="100vh" maxW="100vw" p={0}>
       <HStack h={"full"} spacing="0">
-        <Box bg={"gray.600"} px="5" py={"40vh"} h={"100vh"} w={'20%'}>
+        <Box bg={"gray.600"} px="5" py={"40vh"} h="100vh" w={'15%'}>
           <List color={"white"} align="center">
             <ListItem
               transition="all 0.2s"
@@ -53,7 +62,7 @@ function Dashboard() {
             </ListItem>
           </List>
         </Box>
-        <Box h={"full"} w={'full'} style={{flex : 1}}>
+        <Box h={"full"} w={'84%'}>
           <Outlet />
         </Box>
       </HStack>
