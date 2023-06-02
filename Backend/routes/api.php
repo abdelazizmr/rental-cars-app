@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\RentController;
+use App\Http\Controllers\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,31 +33,44 @@ use App\Http\Controllers\RentController;
     //! Admin auth
     Route::post('/admin/signup', [AdminController::class, 'signup']);
     Route::post('/admin/login', [AdminController::class, 'login']);
-   
-    
+
     //! DashBoard =====================================================
     //? users
     // list of users
     Route::get('/users', [UserController::class, 'index']);
-    
+
     // delete a user
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::delete(
+        '/users/{id}',
+        [UserController::class, 'destroy']
+    );
 
     //? cars
     // add a car
-    Route::post('/cars',[CarController::class,'store']);
+    Route::post('/cars', [CarController::class, 'store']);
 
     // update a car
     Route::put('/cars/{id}', [CarController::class, 'update']);
 
     // delete car
-    Route::delete('/cars/{id}', [CarController::class, 'destroy']);
+    Route::delete('/cars/{id}', [
+        CarController::class, 'destroy'
+    ]);
 
     //rents
     Route::resource('/rents', RentController::class);
 
     // download rent facture
     Route::get('/rents/{id}/download-rent', [RentController::class, 'downloadRent']);
+
+    //! Stripe checkout
+    Route::get('/success', [StripeController::class, 'success'])->name('success');
+    Route::post('/checkout/{id}', [StripeController::class, 'checkout']);
+    Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
+
+   
+    
+   
 
 
 //! Protected Routes
@@ -69,18 +83,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/my-rents/edit/{id}', [RentController::class, 'editRent']);
     // update the user profile
     Route::put('/users/{id}', [UserController::class, 'update']);
-
-    //! admin
-    Route::post('/admin/logout', [AdminController::class, 'logout']);
-
-
-
-
-    //! Dashbaord =============================================
-
-    
     // logout 
     Route::post('/logout', [UserController::class, 'logout']);
+
+    //! admin auth
+    Route::post('/admin/logout', [AdminController::class, 'logout']);
+
+    
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

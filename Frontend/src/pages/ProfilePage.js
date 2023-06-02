@@ -12,7 +12,9 @@ import {
   Heading,
   Spacer,
   Divider,
+  Button
 } from "@chakra-ui/react";
+import { FaCreditCard } from "react-icons/fa";
 
 
 import LoadingSpinner from "../components/ui/loading-spinner";
@@ -124,6 +126,18 @@ function Profile() {
 
   }
 
+
+  const checkout = async ()=>{
+    try{
+      const { data } = await axios.post(
+        `http://127.0.0.1:8000/api/checkout/${user?.id}`
+      );
+      window.location.href = data
+    }catch(e){
+      console.error(e)
+    }
+  }
+
  
   
   if (loading) return <LoadingSpinner />;
@@ -135,19 +149,17 @@ function Profile() {
 
 
   return (
-
- 
     <Container h="100vh" maxW="100vw" py={20}>
-
       <VStack>
-    
         <Box w={"90%"}>
           <HStack>
             <Heading size={["lg", "xl"]}>
-              List of all Mr.<strong className="text-success">{user?.firstname}</strong> rentals
+              List of all Mr.
+              <strong className="text-success">{user?.firstname}</strong>{" "}
+              rentals
             </Heading>
             <Spacer />
-            <ProfileDrawer user={user}/>
+            <ProfileDrawer user={user} />
           </HStack>
           <Divider my={5} />
           <TableContainer>
@@ -166,16 +178,32 @@ function Profile() {
                 </Tr>
               </Thead>
               <Tbody>
-                {rents?.map(r=>(
-                  <RentItem rent={r} cars={cars} update={update} deleteRent={deleteRent} key={r.id} />
+                {rents?.map((r) => (
+                  <RentItem
+                    rent={r}
+                    cars={cars}
+                    update={update}
+                    deleteRent={deleteRent}
+                    key={r.id}
+                  />
                 ))}
               </Tbody>
             </Table>
+            <Button
+              rightIcon={<FaCreditCard />}
+              colorScheme="teal"
+              variant="solid"
+              size="md"
+              float="right"
+              my={3}
+              onClick={()=>checkout()}
+            >
+              Checkout
+            </Button>
           </TableContainer>
         </Box>
       </VStack>
     </Container>
-
   );
 }
 
