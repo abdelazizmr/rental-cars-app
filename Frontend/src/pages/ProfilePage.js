@@ -142,9 +142,12 @@ function Profile() {
   
   if (loading) return <LoadingSpinner />;
 
-  if (rents?.length <= 0) return <Container>
-    <h1 className="text-center mt-5 text-danger">You dont have any rents🤕</h1>
+  if (rents?.length < 0) 
+  return (
+    <Container>
+      <h1 className="text-center mt-5 text-danger">You dont have any rents🤕</h1>
     </Container>
+  )
 
 
 

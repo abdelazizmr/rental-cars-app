@@ -4,8 +4,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\Rent;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StripeController extends Controller
 {
@@ -22,7 +24,7 @@ class StripeController extends Controller
                     'product_data' => [
                         'name' => $item->cars->brand,
                     ],
-                    'unit_amount' => $item->price * 1000,
+                    'unit_amount' => $item-> price * 100,
                 ],
                 'quantity' => 1,
             ];
@@ -35,14 +37,32 @@ class StripeController extends Controller
             'cancel_url' => route('cancel'),
         ]);
 
-
         return $checkout_session->url;
     }
-
-    public function success()
+    
+    public function success(Request $request)
     {
+        // \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        // $sessionId = $request->get('session_id');
+
+        // try {
+        //     $session = \Stripe\Checkout\Session::retrieve($sessionId);
+        //     if (!$session) {
+        //         throw new NotFoundHttpException;
+        //     }
+        //     $customer = \Stripe\Customer::retrieve($session->customer);
+
+        //     return view('checkout.success', compact('customer'));
+        // } catch (\Exception $e) {
+        //     throw new NotFoundHttpException();
+        // }
+
+        
         return view('checkout.success');
+
+     
     }
+
 
     public function cancel()
     {
