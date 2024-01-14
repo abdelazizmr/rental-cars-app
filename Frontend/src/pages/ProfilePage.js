@@ -127,17 +127,7 @@ function Profile() {
   }
 
 
-  const checkout = async ()=>{
-    try{
-      const { data } = await axios.post(
-        `http://127.0.0.1:8000/api/checkout/${user?.id}`
-      );
-      window.location.href = data
-    }catch(e){
-      console.error(e)
-    }
-  }
-
+  
  
   
   if (loading) return <LoadingSpinner />;
@@ -192,17 +182,7 @@ function Profile() {
                 ))}
               </Tbody>
             </Table>
-            <Button
-              rightIcon={<FaCreditCard />}
-              colorScheme="teal"
-              variant="solid"
-              size="md"
-              float="right"
-              my={3}
-              onClick={()=>checkout()}
-            >
-              Checkout
-            </Button>
+            
           </TableContainer>
         </Box>
       </VStack>
